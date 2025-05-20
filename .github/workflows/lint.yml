@@ -1,23 +1,28 @@
-name: Lint Check
-
 on:
   pull_request:
     branches:
       - main
 
 jobs:
-  build:
+  lint-check:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-      - run: pnpm install
-      - run: pnpm lint
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run linter
+        run: pnpm lint
